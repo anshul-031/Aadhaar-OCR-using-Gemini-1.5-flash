@@ -1,49 +1,56 @@
+'use client';
+
 import { AadhaarData } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { User, Users, Calendar, MapPin, CreditCard } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMemo } from 'react';
 
 interface AadhaarDetailsProps {
-  data: AadhaarData;
+  data: AadhaarData | null;
   className?: string;
 }
 
 export function AadhaarDetails({ data, className }: AadhaarDetailsProps) {
-  if (!data) return null;
+  const details = useMemo(() => {
+    if (!data) return [];
+    
+    return [
+      { 
+        label: 'Name',
+        value: data.name,
+        icon: <User className="h-4 w-4" />
+      },
+      { 
+        label: "Father's Name",
+        value: data.fatherName,
+        icon: <Users className="h-4 w-4" />
+      },
+      { 
+        label: 'Date of Birth',
+        value: data.dateOfBirth,
+        icon: <Calendar className="h-4 w-4" />
+      },
+      { 
+        label: 'Gender',
+        value: data.gender,
+        icon: <User className="h-4 w-4" />
+      },
+      { 
+        label: 'Aadhaar Number',
+        value: data.aadhaarNumber,
+        icon: <CreditCard className="h-4 w-4" />
+      },
+      { 
+        label: 'Address',
+        value: data.address,
+        icon: <MapPin className="h-4 w-4" />
+      },
+    ];
+  }, [data]);
 
-  const details = [
-    { 
-      label: 'Name',
-      value: data.name,
-      icon: <User className="h-4 w-4" />
-    },
-    { 
-      label: "Father's Name",
-      value: data.fatherName,
-      icon: <Users className="h-4 w-4" />
-    },
-    { 
-      label: 'Date of Birth',
-      value: data.dateOfBirth,
-      icon: <Calendar className="h-4 w-4" />
-    },
-    { 
-      label: 'Gender',
-      value: data.gender,
-      icon: <User className="h-4 w-4" />
-    },
-    { 
-      label: 'Aadhaar Number',
-      value: data.aadhaarNumber,
-      icon: <CreditCard className="h-4 w-4" />
-    },
-    { 
-      label: 'Address',
-      value: data.address,
-      icon: <MapPin className="h-4 w-4" />
-    },
-  ];
+  if (!data || details.length === 0) return null;
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -62,7 +69,7 @@ export function AadhaarDetails({ data, className }: AadhaarDetailsProps) {
               <div className="flex-1 space-y-1">
                 <p className="text-sm text-gray-500">{label}</p>
                 <p className="font-medium text-gray-900">
-                  {label === 'Aadhaar Number' 
+                  {label === 'Aadhaar Number' && value 
                     ? value.replace(/(\d{4})/g, '$1 ').trim()
                     : value}
                 </p>

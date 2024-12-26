@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "b5e3d8a2-7f6c-4d5a-9b8e-8f7c2d1e3f4a",
     "name": "Aadhaar OCR API",
-    "description": "API collection for Aadhaar card OCR processing",
+    "description": "API collection for Aadhaar card OCR processing using Gemini Vision",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -10,45 +10,55 @@
       "name": "Process Aadhaar Card",
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "formdata",
           "formdata": [
             {
-              "key": "files",
+              "key": "file",
               "type": "file",
               "src": [],
-              "description": "Aadhaar card image files (front and back)"
+              "description": "Upload an Aadhaar card image (JPEG, PNG, WebP) or PDF"
             }
           ]
         },
         "url": {
-          "raw": "{{baseUrl}}/api/aadhaar/process",
+          "raw": "{{baseUrl}}/api/aadhaar/gemini",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "aadhaar", "process"]
+          "path": ["api", "aadhaar", "gemini"]
         },
-        "description": "Process Aadhaar card images and extract information"
+        "description": "Process an Aadhaar card image and extract information using Gemini Vision API"
       },
       "response": [
         {
           "name": "Successful Response",
           "originalRequest": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "files",
+                  "key": "file",
                   "type": "file",
                   "src": []
                 }
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/api/aadhaar/process",
+              "raw": "{{baseUrl}}/api/aadhaar/gemini",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "aadhaar", "process"]
+              "path": ["api", "aadhaar", "gemini"]
             }
           },
           "status": "OK",

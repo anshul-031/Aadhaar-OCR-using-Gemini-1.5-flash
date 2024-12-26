@@ -1,23 +1,34 @@
-import { ProcessedFile, AadhaarSide } from '../types/file';
+import { ProcessedFile } from '../types/file';
 import { logger } from './logger';
 import { getFileType } from './file/type-detector';
 import { convertToBase64 } from './file/converters';
+import type { ProcessableFile } from '../types/api';
 
 export async function processFile(
-  file: File, 
-  side: AadhaarSide
+  { file, side }: ProcessableFile
 ): Promise<ProcessedFile> {
-  const fileType = getFileType(file);
-  
   try {
+    logger.debug('Processing file', { fileName: file.name, fileType: file.type, side });
+    
+    const fileType = getFileType(file);
     const data = await convertToBase64(file);
+    
+    if (!data) {
+      throw new Error('Failed to convert file to base64');
+    }
+
     return {
       data,
       mimeType: file.type,
       side
     };
   } catch (error) {
-    logger.error('Failed to process file', { error, fileName: file.name });
-    throw new Error('Failed to process file');
+    logger.error('File processing failed', { 
+      error,
+      fileName: file.name,
+      fileType: file.type,
+      side 
+    });
+    throw error instanceof Error ? error : new Error('Failed to process file');
   }
 }

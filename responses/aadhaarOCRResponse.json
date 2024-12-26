@@ -1,0 +1,22 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "```json\n{\n  \"Name\": \"Anshul Kumar\",\n  \"Father's Name\": \"Vijay Kumar Goel\",\n  \"Date of Birth\": \"31/05/1996\",\n  \"Gender\": \"MALE\",\n  \"Aadhaar Number\": \"XXXX XXXX 2433\",\n  \"Address\": \"S/O Vijay Kumar Goel, 72/436, AGARSAIN VIHAR, JANSATH ROAD, Muzaffarnagar, PO: Muzaffar Nagar City, DIST: Muzaffarnagar, Uttar Pradesh - 251002\"\n}\n```"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "avgLogprobs": -0.00071411579847335815
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1676,
+    "candidatesTokenCount": 142,
+    "totalTokenCount": 1818
+  },
+  "modelVersion": "gemini-1.5-flash"
+}
