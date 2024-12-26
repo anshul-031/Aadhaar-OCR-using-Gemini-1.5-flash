@@ -4,6 +4,7 @@ import { validateAadhaarData } from '../validation/aadhaar';
 import { processFile } from '../utils/file-processor';
 import { getVisionModel } from '../gemini/client';
 import { AADHAAR_EXTRACTION_PROMPT } from '../gemini/prompts';
+import { parseGeminiResponse } from '../utils/gemini-parser';
 import { logger } from '../utils/logger';
 import type { ProcessedFile, AadhaarSide } from '../types/file';
 
@@ -45,8 +46,11 @@ export async function processAadhaarFiles(
 
     const result = await model.generateContent(contentParts);
     const response = await result.response;
-    const parsedData = JSON.parse(response.text());
-
+    
+    // Parse the Gemini response
+    const parsedData = parseGeminiResponse(response);
+    
+    // Validate the parsed data
     validateAadhaarData(parsedData);
     logger.info('Aadhaar data validation passed');
 

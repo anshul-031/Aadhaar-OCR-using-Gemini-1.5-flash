@@ -44,12 +44,11 @@ export default function Home() {
     }
 
     setLoading(true);
-    logger.info('Starting Aadhaar card processing', { 
-      fileCount: files.length 
-    });
+    logger.info('Starting Aadhaar card processing', { fileCount: files.length });
 
     try {
       const extractedData = await processAadhaarFiles(files);
+      console.log('Extracted Data:', extractedData); // Debug log
       setData(extractedData);
       toast({
         title: 'Success',
@@ -62,6 +61,7 @@ export default function Home() {
         description: error instanceof Error ? error.message : 'Failed to extract data',
         variant: 'destructive',
       });
+      setData(null); // Reset data on error
     } finally {
       setLoading(false);
     }
@@ -171,7 +171,7 @@ export default function Home() {
             </div>
           </form>
 
-          {data && <AadhaarDetails data={data} />}
+          {data && <AadhaarDetails data={data} className="mt-8" />}
         </Card>
       </div>
     </div>

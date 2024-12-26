@@ -1,0 +1,81 @@
+{
+  "info": {
+    "_postman_id": "b5e3d8a2-7f6c-4d5a-9b8e-8f7c2d1e3f4a",
+    "name": "Aadhaar OCR API",
+    "description": "API collection for Aadhaar card OCR processing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Process Aadhaar Card",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "files",
+              "type": "file",
+              "src": [],
+              "description": "Aadhaar card image files (front and back)"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/aadhaar/process",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "aadhaar", "process"]
+        },
+        "description": "Process Aadhaar card images and extract information"
+      },
+      "response": [
+        {
+          "name": "Successful Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/aadhaar/process",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "aadhaar", "process"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "name": "John Doe",
+            "fatherName": "Richard Doe",
+            "dateOfBirth": "1990-01-01",
+            "gender": "Male",
+            "aadhaarNumber": "XXXX-XXXX-1234",
+            "address": "123 Main St, City, State, PIN: 123456"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}
