@@ -3,7 +3,7 @@
 import { AadhaarData } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { User, Users, Calendar, MapPin, CreditCard } from 'lucide-react';
+import { User, Users, Calendar, MapPin, CreditCard, Building, MapPinned } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 
@@ -43,10 +43,25 @@ export function AadhaarDetails({ data, className }: AadhaarDetailsProps) {
         icon: <CreditCard className="h-4 w-4" />
       },
       { 
-        label: 'Address',
+        label: 'Full Address',
         value: data.address,
         icon: <MapPin className="h-4 w-4" />
       },
+      {
+        label: 'District',
+        value: data.addressComponents.district,
+        icon: <Building className="h-4 w-4" />
+      },
+      {
+        label: 'State',
+        value: data.addressComponents.state,
+        icon: <MapPinned className="h-4 w-4" />
+      },
+      {
+        label: 'PIN Code',
+        value: data.addressComponents.pinCode,
+        icon: <MapPin className="h-4 w-4" />
+      }
     ];
   }, [data]);
 
