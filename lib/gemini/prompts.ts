@@ -1,16 +1,21 @@
-export const AADHAAR_EXTRACTION_PROMPT = `Extract the following information from this Aadhaar card image in JSON format:
-  - Name
-  - Father's Name
-  - Date of Birth
-  - Gender
-  - Aadhaar Number
-  - Address (full address as a single string)
+export const AADHAAR_EXTRACTION_PROMPT = `I will provide you with one or two images of an Aadhaar card (front and/or back). Extract ALL available information from these images and combine them into a single comprehensive response.
+
+Extract and combine the following information from the provided Aadhaar card image(s) in JSON format:
+  - Name (from front)
+  - Father's Name (from front)
+  - Date of Birth (from front)
+  - Gender (from front)
+  - Aadhaar Number (from front)
+  - Address (full address as a single string, from back)
   - Address Components:
-    - Street (if available)
-    - Locality (if available)
-    - District
-    - State
-    - PIN Code
+    - Street (if available, from back)
+    - Locality (if available, from back)
+    - District (from back)
+    - State (from back)
+    - PIN Code (from back)
+
+If both front and back images are provided, combine the information from both sides.
+If only one side is provided, extract whatever information is available from that side.
 
 Return the data in the following JSON structure:
 {
@@ -29,4 +34,4 @@ Return the data in the following JSON structure:
   }
 }
 
-Only return the JSON object, nothing else. Ensure all fields are present in the response.`;
+Only return the JSON object, nothing else. For any fields that cannot be extracted from the provided image(s), use an empty string.`;

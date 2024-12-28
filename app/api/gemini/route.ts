@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateFile } from '@/lib/validation/file';
 import { processUploadedFile } from '@/lib/api/file/process';
-import { processImageWithGemini } from '@/lib/api/gemini/process-image';
+import { processImagesWithGemini } from '@/lib/api/gemini/process-image';
 import { logger } from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
@@ -19,7 +19,11 @@ export async function POST(request: NextRequest) {
     }
 
     const { base64Data, mimeType } = await processUploadedFile(file);
-    const data = await processImageWithGemini(base64Data, mimeType);
+    const data = await processImagesWithGemini([{
+      data: base64Data,
+      mimeType,
+      side: 'complete'
+    }]);
 
     return NextResponse.json(data);
   } catch (error) {

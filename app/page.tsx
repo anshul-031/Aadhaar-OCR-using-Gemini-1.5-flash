@@ -47,8 +47,24 @@ export default function Home() {
     logger.info('Starting Aadhaar card processing', { fileCount: files.length });
 
     try {
-      const extractedData = await processAadhaarFiles(files);
-      console.log('Extracted Data:', extractedData); // Debug log
+      // Create FormData with all files
+      const formData = new FormData();
+      files.forEach(({ file }) => {
+        formData.append('files', file);
+      });
+
+      // Send request to API
+      const response = await fetch('/api/aadhaar/gemini', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to process Aadhaar card');
+      }
+
+      const extractedData = await response.json();
       setData(extractedData);
       toast({
         title: 'Success',
@@ -61,7 +77,7 @@ export default function Home() {
         description: error instanceof Error ? error.message : 'Failed to extract data',
         variant: 'destructive',
       });
-      setData(null); // Reset data on error
+      setData(null);
     } finally {
       setLoading(false);
     }
@@ -75,7 +91,7 @@ export default function Home() {
             Aadhaar Card OCR
           </h1>
           <p className="text-lg text-gray-600">
-            Upload your Aadhaar card image or PDF to extract information automatically
+            Upload your Aadhaar card images to extract information automatically
           </p>
         </div>
 

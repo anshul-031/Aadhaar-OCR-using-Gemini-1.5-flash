@@ -1,5 +1,7 @@
 import { AadhaarData } from '../types';
 import { logger } from '../utils/logger';
+import { processFile } from '../utils/file-processor';
+import { processImagesWithGemini } from '../api/gemini/process-image';
 import type { ProcessableFile } from '../types/api';
 
 export async function processAadhaarFiles(
@@ -11,23 +13,16 @@ export async function processAadhaarFiles(
       files: files.map(f => ({ name: f.file.name, side: f.side }))
     });
 
-    const formData = new FormData();
-    formData.append('file', files[0].file); // For now, just process the first file
+    // Process all files to base64
+    const processedFiles = await Promise.all(
+      files.map(file => processFile(file))
+    );
 
-    const response = await fetch('/api/aadhaar/gemini', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to process Aadhaar card');
-    }
-
-    const data = await response.json();
+    // Process all images together with Gemini
+    const data = await processImagesWithGemini(processedFiles);
     logger.info('Successfully extracted Aadhaar data', { data });
 
-    return data as AadhaarData;
+    return data;
   } catch (error) {
     logger.error('Failed to process Aadhaar files', error);
     throw error instanceof Error ? error : new Error('Failed to process files');

@@ -2,12 +2,12 @@
   "info": {
     "_postman_id": "b5e3d8a2-7f6c-4d5a-9b8e-8f7c2d1e3f4a",
     "name": "Aadhaar OCR API",
-    "description": "API collection for Aadhaar card OCR processing using Gemini Vision",
+    "description": "API collection for Aadhaar card OCR processing using Gemini Vision Pro",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Process Aadhaar Card",
+      "name": "Process Single Aadhaar Card",
       "request": {
         "method": "POST",
         "header": [
@@ -23,7 +23,43 @@
               "key": "file",
               "type": "file",
               "src": [],
-              "description": "Upload an Aadhaar card image (JPEG, PNG, WebP) or PDF"
+              "description": "Upload a single Aadhaar card image (JPEG, PNG, WebP) or PDF"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/gemini",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "gemini"]
+        },
+        "description": "Process a single Aadhaar card image and extract information using Gemini Vision API"
+      },
+      "response": []
+    },
+    {
+      "name": "Process Multiple Aadhaar Card Images",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "files",
+              "type": "file",
+              "src": [],
+              "description": "Upload front and back images of Aadhaar card (max 2 files)"
+            },
+            {
+              "key": "files",
+              "type": "file",
+              "src": [],
+              "description": "Upload front and back images of Aadhaar card (max 2 files)"
             }
           ]
         },
@@ -32,33 +68,23 @@
           "host": ["{{baseUrl}}"],
           "path": ["api", "aadhaar", "gemini"]
         },
-        "description": "Process an Aadhaar card image and extract information using Gemini Vision API"
+        "description": "Process both front and back images of an Aadhaar card and extract combined information using Gemini Vision API"
       },
       "response": [
         {
           "name": "Successful Response",
           "originalRequest": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "file",
+                  "key": "files",
                   "type": "file",
                   "src": []
                 }
               ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/aadhaar/gemini",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "aadhaar", "gemini"]
             }
           },
           "status": "OK",
@@ -76,7 +102,43 @@
             "dateOfBirth": "1990-01-01",
             "gender": "Male",
             "aadhaarNumber": "XXXX-XXXX-1234",
-            "address": "123 Main St, City, State, PIN: 123456"
+            "address": "123 Main St, City, State, PIN: 123456",
+            "addressComponents": {
+              "street": "123 Main St",
+              "locality": "Downtown",
+              "district": "Central District",
+              "state": "State",
+              "pinCode": "123456"
+            }
+          }
+        },
+        {
+          "name": "Error Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "error": "Invalid file type. Please upload a PDF or image (JPEG, PNG, WebP)."
           }
         }
       ]

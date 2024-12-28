@@ -1,25 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateFile } from '@/lib/validation/file';
-import { processUploadedFile } from '@/lib/api/file/process';
-import { processImageWithGemini } from '@/lib/api/gemini/process-image';
+import { validateAndMapFiles } from '@/lib/validation/api';
+import { processAadhaarFiles } from '@/lib/services/aadhaar';
 import { logger } from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
+    const files = formData.getAll('files');
 
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    if (!files || files.length === 0) {
+      return NextResponse.json(
+        { error: 'No files provided' },
+        { status: 400 }
+      );
     }
 
-    const validation = validateFile(file);
-    if (!validation.isValid) {
-      return NextResponse.json({ error: validation.error }, { status: 400 });
+    if (files.length > 2) {
+      return NextResponse.json(
+        { error: 'Maximum 2 files allowed' },
+        { status: 400 }
+      );
     }
 
-    const { base64Data, mimeType } = await processUploadedFile(file);
-    const data = await processImageWithGemini(base64Data, mimeType);
+    const processableFiles = validateAndMapFiles(files);
+    const data = await processAadhaarFiles(processableFiles);
 
     return NextResponse.json(data);
   } catch (error) {
