@@ -2,42 +2,12 @@
   "info": {
     "_postman_id": "b5e3d8a2-7f6c-4d5a-9b8e-8f7c2d1e3f4a",
     "name": "Aadhaar OCR API",
-    "description": "API collection for Aadhaar card OCR processing using Gemini Vision Pro",
+    "description": "API collection for Aadhaar card OCR processing using Gemini Vision Pro. The API supports both single and multiple file uploads.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Process Single Aadhaar Card",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "formdata",
-          "formdata": [
-            {
-              "key": "file",
-              "type": "file",
-              "src": [],
-              "description": "Upload a single Aadhaar card image (JPEG, PNG, WebP) or PDF"
-            }
-          ]
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/gemini",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "gemini"]
-        },
-        "description": "Process a single Aadhaar card image and extract information using Gemini Vision API"
-      },
-      "response": []
-    },
-    {
-      "name": "Process Multiple Aadhaar Card Images",
+      "name": "Process Aadhaar Card",
       "request": {
         "method": "POST",
         "header": [
@@ -53,13 +23,7 @@
               "key": "files",
               "type": "file",
               "src": [],
-              "description": "Upload front and back images of Aadhaar card (max 2 files)"
-            },
-            {
-              "key": "files",
-              "type": "file",
-              "src": [],
-              "description": "Upload front and back images of Aadhaar card (max 2 files)"
+              "description": "Upload Aadhaar card image(s) or PDF(s). Maximum 2 files allowed."
             }
           ]
         },
@@ -68,11 +32,11 @@
           "host": ["{{baseUrl}}"],
           "path": ["api", "aadhaar", "gemini"]
         },
-        "description": "Process both front and back images of an Aadhaar card and extract combined information using Gemini Vision API"
+        "description": "Process Aadhaar card images and extract information using Gemini Vision API. Supports both single file (complete Aadhaar) and dual file (front and back) uploads.\n\nAccepted file types:\n- Images: JPEG, PNG, WebP\n- PDF\n\nMaximum file size: 5MB per file"
       },
       "response": [
         {
-          "name": "Successful Response",
+          "name": "Successful Response (Single File)",
           "originalRequest": {
             "method": "POST",
             "header": [],

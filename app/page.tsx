@@ -8,7 +8,6 @@ import { Upload, Loader2, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AadhaarDetails } from '@/components/aadhaar-details';
 import { AadhaarData } from '@/lib/types';
-import { processAadhaarFiles } from '@/lib/services/aadhaar';
 import { logger } from '@/lib/utils/logger';
 import type { AadhaarSide } from '@/lib/types/file';
 

@@ -25,12 +25,37 @@ export async function POST(request: NextRequest) {
     const processableFiles = validateAndMapFiles(files);
     const data = await processAadhaarFiles(processableFiles);
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Content-Type': 'application/json',
+      }
+    });
   } catch (error) {
     logger.error('API error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Content-Type': 'application/json',
+        }
+      }
     );
   }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Accept',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }
