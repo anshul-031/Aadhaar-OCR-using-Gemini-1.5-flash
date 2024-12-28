@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Upload, Loader2, FileText } from 'lucide-react';
+import { Upload, Loader2, FileText, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AadhaarDetails } from '@/components/aadhaar-details';
 import { AadhaarData } from '@/lib/types';
@@ -31,6 +31,10 @@ export default function Home() {
     }
   };
 
+  const removeFile = (side: AadhaarSide) => {
+    setFiles(files.filter(f => f.side !== side));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (files.length === 0) {
@@ -46,13 +50,11 @@ export default function Home() {
     logger.info('Starting Aadhaar card processing', { fileCount: files.length });
 
     try {
-      // Create FormData with all files
       const formData = new FormData();
       files.forEach(({ file }) => {
         formData.append('files', file);
       });
 
-      // Send request to API
       const response = await fetch('/api/aadhaar/gemini', {
         method: 'POST',
         body: formData,
@@ -97,12 +99,12 @@ export default function Home() {
         <Card className="p-6 bg-white shadow-lg rounded-lg">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="flex items-center justify-center gap-4">
+              <div className="space-y-2">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => document.getElementById('complete-upload')?.click()}
-                  className="w-full"
+                  className="w-full relative"
                 >
                   <FileText className="mr-2 h-4 w-4" />
                   Upload Complete Aadhaar
@@ -114,6 +116,22 @@ export default function Home() {
                   onChange={(e) => handleFileChange(e, 'complete')}
                   className="hidden"
                 />
+                {files.find(f => f.side === 'complete') && (
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                    <span className="text-sm text-gray-600 truncate">
+                      {files.find(f => f.side === 'complete')?.file.name}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeFile('complete')}
+                      className="ml-2"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
 
               <div className="relative">
@@ -126,7 +144,7 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                <div className="space-y-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -143,8 +161,24 @@ export default function Home() {
                     onChange={(e) => handleFileChange(e, 'front')}
                     className="hidden"
                   />
+                  {files.find(f => f.side === 'front') && (
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                      <span className="text-sm text-gray-600 truncate">
+                        {files.find(f => f.side === 'front')?.file.name}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeFile('front')}
+                        className="ml-2"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -161,6 +195,22 @@ export default function Home() {
                     onChange={(e) => handleFileChange(e, 'back')}
                     className="hidden"
                   />
+                  {files.find(f => f.side === 'back') && (
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+                      <span className="text-sm text-gray-600 truncate">
+                        {files.find(f => f.side === 'back')?.file.name}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeFile('back')}
+                        className="ml-2"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
