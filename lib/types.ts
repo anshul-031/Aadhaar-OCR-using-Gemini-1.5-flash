@@ -1,6 +1,9 @@
 export interface AadhaarData {
   name: string;
-  fatherName: string;
+  careOf: {
+    name: string;
+    relationship: string;
+  };
   dateOfBirth: string;
   gender: string;
   aadhaarNumber: string;
@@ -12,4 +15,5 @@ export interface AadhaarData {
     state: string;
     pinCode: string;
   };
+  documentType: string;
 }

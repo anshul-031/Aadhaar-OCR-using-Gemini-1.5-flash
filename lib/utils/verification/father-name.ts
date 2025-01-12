@@ -4,47 +4,61 @@ import { logger } from '../logger';
 export function verifyFatherName(data: AadhaarData): { 
   isValid: boolean;
   source: 'primary' | 'address' | null;
-  value: string | null;
+  value: { name: string; relationship: string } | null;
 } {
   try {
-    // Check primary father's name field
-    if (data.fatherName && data.fatherName.trim() !== '') {
-      logger.debug('Father\'s name found in primary field', { name: data.fatherName });
+    // Check primary careOf field
+    if (data.careOf.name && data.careOf.name.trim() !== '') {
+      logger.debug('Care of name found in primary field', { 
+        name: data.careOf.name,
+        relationship: data.careOf.relationship
+      });
       return {
         isValid: true,
         source: 'primary',
-        value: data.fatherName.trim()
+        value: {
+          name: data.careOf.name.trim(),
+          relationship: data.careOf.relationship
+        }
       };
     }
 
-    // Check address for father's name patterns
-    const addressPatterns = [
-      /S\/O\s+([^,]+)/i,      // S/O pattern
-      /Son\s+of\s+([^,]+)/i,  // Son of pattern
-      /C\/O\s+([^,]+)/i       // C/O pattern
+    // Check address for relationship patterns
+    const relationshipPatterns = [
+      { pattern: /S\/O\s+([^,]+)/i, relationship: 'Father' },      // S/O pattern
+      { pattern: /Son\s+of\s+([^,]+)/i, relationship: 'Father' },  // Son of pattern
+      { pattern: /C\/O\s+([^,]+)/i, relationship: 'Guardian' },    // C/O pattern
+      { pattern: /W\/O\s+([^,]+)/i, relationship: 'Husband' },     // W/O pattern
+      { pattern: /D\/O\s+([^,]+)/i, relationship: 'Father' }       // D/O pattern
     ];
 
-    for (const pattern of addressPatterns) {
+    for (const { pattern, relationship } of relationshipPatterns) {
       const match = data.address.match(pattern);
       if (match && match[1]) {
         const extractedName = match[1].trim();
-        logger.debug('Father\'s name found in address', { name: extractedName });
+        logger.debug('Care of details found in address', { 
+          name: extractedName,
+          relationship
+        });
         return {
           isValid: true,
           source: 'address',
-          value: extractedName
+          value: {
+            name: extractedName,
+            relationship
+          }
         };
       }
     }
 
-    logger.warn('Father\'s name not found in either primary field or address');
+    logger.warn('No care of details found in either primary field or address');
     return {
       isValid: false,
       source: null,
       value: null
     };
   } catch (error) {
-    logger.error('Error verifying father\'s name', error);
+    logger.error('Error verifying care of details', error);
     throw error;
   }
 }
