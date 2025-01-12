@@ -22,15 +22,15 @@ export async function processAadhaarFiles(
     // Process all images together with Gemini
     const data = await processImagesWithGemini(processedFiles);
     
-    // Verify father's name
-    const fatherNameVerification = verifyFatherName(data);
+    // Verify care of information
+    const careOfVerification = verifyFatherName(data);
     
-    // If father's name was found in address but not in primary field, update the data
-    if (!data.fatherName && fatherNameVerification.isValid && fatherNameVerification.value) {
-      data.fatherName = fatherNameVerification.value;
-      logger.info('Updated father\'s name from address section', { 
-        name: fatherNameVerification.value,
-        source: fatherNameVerification.source
+    // If care of details were found in address but not in primary field, update the data
+    if (!data.careOf.name && careOfVerification.isValid && careOfVerification.value) {
+      data.careOf = careOfVerification.value;
+      logger.info('Updated care of details from address section', { 
+        details: careOfVerification.value,
+        source: careOfVerification.source
       });
     }
 

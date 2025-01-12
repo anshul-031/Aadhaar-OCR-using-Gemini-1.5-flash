@@ -3,7 +3,7 @@
 import { AadhaarData } from '@/lib/types';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { User, Users, Calendar, MapPin, CreditCard, Building, MapPinned } from 'lucide-react';
+import { User, Users, Calendar, MapPin, CreditCard, Building, MapPinned, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 
@@ -17,14 +17,19 @@ export function AadhaarDetails({ data, className }: AadhaarDetailsProps) {
     if (!data) return [];
     
     return [
+      {
+        label: 'Document Type',
+        value: data.documentType,
+        icon: <FileText className="h-4 w-4" />
+      },
       { 
         label: 'Name',
         value: data.name,
         icon: <User className="h-4 w-4" />
       },
       { 
-        label: "Father's Name",
-        value: data.fatherName,
+        label: `${data.careOf.relationship}'s Name`,
+        value: data.careOf.name,
         icon: <Users className="h-4 w-4" />
       },
       { 
@@ -40,7 +45,8 @@ export function AadhaarDetails({ data, className }: AadhaarDetailsProps) {
       { 
         label: 'Aadhaar Number',
         value: data.aadhaarNumber,
-        icon: <CreditCard className="h-4 w-4" />
+        icon: <CreditCard className="h-4 w-4" />,
+        hidden: data.documentType !== 'Aadhaar Card'
       },
       { 
         label: 'Full Address',
@@ -62,7 +68,7 @@ export function AadhaarDetails({ data, className }: AadhaarDetailsProps) {
         value: data.addressComponents.pinCode,
         icon: <MapPin className="h-4 w-4" />
       }
-    ];
+    ].filter(detail => !detail.hidden);
   }, [data]);
 
   if (!data || details.length === 0) return null;

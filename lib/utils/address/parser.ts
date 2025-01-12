@@ -1,17 +1,25 @@
 import { AddressComponents } from '@/lib/types/address';
 
+function removeRelationshipPrefixes(address: string): string {
+  // Remove common relationship prefixes
+  return address.replace(/(?:S\/O|C\/O|D\/O|W\/O|Son of|Care of|Daughter of|Wife of)[^,]+,\s*/gi, '');
+}
+
 export function parseAddressComponents(address: string): AddressComponents {
-  // Extract components from the full address string
-  const pinCodeMatch = address.match(/(\d{6})/);
-  const stateMatch = address.match(/([A-Za-z\s]+)\s*-\s*\d{6}/);
+  // Clean the address first
+  const cleanedAddress = removeRelationshipPrefixes(address);
+  
+  // Extract components from the cleaned address string
+  const pinCodeMatch = cleanedAddress.match(/(\d{6})/);
+  const stateMatch = cleanedAddress.match(/([A-Za-z\s]+)\s*-\s*\d{6}/);
   
   // Find district by looking for "DIST:" or similar patterns
-  const districtMatch = address.match(/DIST:\s*([^,]+)/i) || 
-                       address.match(/District:\s*([^,]+)/i);
+  const districtMatch = cleanedAddress.match(/DIST:\s*([^,]+)/i) || 
+                       cleanedAddress.match(/District:\s*([^,]+)/i);
 
   return {
-    street: extractStreet(address),
-    locality: extractLocality(address),
+    street: extractStreet(cleanedAddress),
+    locality: extractLocality(cleanedAddress),
     district: districtMatch ? districtMatch[1].trim() : '',
     state: stateMatch ? stateMatch[1].trim() : '',
     pinCode: pinCodeMatch ? pinCodeMatch[1] : ''
