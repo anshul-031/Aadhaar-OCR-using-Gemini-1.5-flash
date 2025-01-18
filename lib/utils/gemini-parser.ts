@@ -12,22 +12,31 @@ export function parseGeminiResponse(response: any): AadhaarData {
 
     // Extract address components if not provided by the API
     const addressComponents = parsedData.addressComponents || 
-                            parseAddressComponents(parsedData.Address || '');
+                            parseAddressComponents(parsedData.Address || parsedData.address || '');
 
     // Map the response fields to our AadhaarData type
     return {
-      name: parsedData.Name || parsedData.name,
-      fatherName: parsedData["Father's Name"] || parsedData.fatherName,
-      dateOfBirth: parsedData["Date of Birth"] || parsedData.dateOfBirth,
-      gender: parsedData.Gender || parsedData.gender,
-      aadhaarNumber: parsedData["Aadhaar Number"] || parsedData.aadhaarNumber,
-      address: parsedData.Address || parsedData.address,
+      documentType: parsedData.documentType || parsedData.DocumentType || 'Unknown',
+      name: parsedData.Name || parsedData.name || '',
+      careOf: {
+        name: parsedData.careOf?.name || 
+              parsedData["Father's Name"] || 
+              parsedData.fatherName || 
+              '',
+        relationship: parsedData.careOf?.relationship || 
+                     (parsedData["Father's Name"] ? 'Father' : 
+                      parsedData.fatherName ? 'Father' : 'Guardian')
+      },
+      dateOfBirth: parsedData["Date of Birth"] || parsedData.dateOfBirth || '',
+      gender: parsedData.Gender || parsedData.gender || '',
+      aadhaarNumber: parsedData["Aadhaar Number"] || parsedData.aadhaarNumber || '',
+      address: parsedData.Address || parsedData.address || '',
       addressComponents: {
         street: addressComponents.street || '',
         locality: addressComponents.locality || '',
-        district: addressComponents.district,
-        state: addressComponents.state,
-        pinCode: addressComponents.pinCode
+        district: addressComponents.district || '',
+        state: addressComponents.state || '',
+        pinCode: addressComponents.pinCode || ''
       }
     };
   } catch (error) {
